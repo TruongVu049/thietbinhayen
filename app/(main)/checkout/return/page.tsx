@@ -56,6 +56,8 @@ export default async function VnpayReturnPage({
     VnpPayDate: data.vnp_PayDate ?? "",
   });
 
+  console.log("res", res);
+
   if (res.status === 200) {
     try {
       const order = res.body as HoaDon;
