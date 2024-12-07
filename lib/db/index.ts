@@ -798,6 +798,15 @@ export const deleteAddress = async (address: DiaChi) => {
   return res;
 };
 
+export async function getDiaChis(userId: number): Promise<DiaChi[]> {
+  const query = `/api/DiaChis/${userId}`;
+  const res = await FetchGet({
+    cache: "no-store",
+    query: query,
+  });
+  return res;
+}
+
 // import
 // get
 export async function getNCCS(): Promise<NCC[]> {

@@ -3,7 +3,7 @@
 
 import { DiaChi } from "@/lib/db/types";
 import { User } from "next-auth";
-import React, { useEffect, useRef, useState, useTransition } from "react";
+import React, { use, useEffect, useRef, useState, useTransition } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,12 @@ import { addressSchema, AddressFormData } from "@/schemas";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { CreateAddress, deleteAddress, updateAddress } from "@/lib/db";
+import {
+  CreateAddress,
+  deleteAddress,
+  getDiaChis,
+  updateAddress,
+} from "@/lib/db";
 import Spinner from "../Spinner";
 
 export default function Address({
@@ -74,15 +79,11 @@ export default function Address({
     async function fetchPosts() {
       setIsLoading(true);
       console.log("fetch");
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_HOST}/api/DiaChis/${user?.id}`
-      );
-      console.log(res);
+      const diachis = await getDiaChis(Number(user?.id));
 
-      const data = await res.json();
-      if (data) {
-        setDataAddress(data);
-        onUpdateSelectedAddress(data[0]);
+      if (diachis) {
+        setDataAddress(diachis);
+        onUpdateSelectedAddress(diachis[0]);
       }
       setIsLoading(false);
     }
