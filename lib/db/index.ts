@@ -988,6 +988,20 @@ export async function getVPNSecureHash1(
   return res;
 }
 
+export async function postSendmail(data: string) {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_URL_HOST}/api/send-email`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: data,
+    }
+  );
+  return response;
+}
+
 export async function getVPNSecureHash(
   secret: string,
   data: string
