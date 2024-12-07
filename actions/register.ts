@@ -2,6 +2,7 @@
 import * as z from "zod";
 import { registerSchema } from "@/schemas";
 import { postSendmail } from "@/lib/db";
+import { cookies } from "next/headers";
 
 export const registerAction = async (data: z.infer<typeof registerSchema>) => {
   try {
@@ -25,18 +26,19 @@ export const registerAction = async (data: z.infer<typeof registerSchema>) => {
     const newCus = await res.json();
 
     const url =
-      process.env.NEXT_PUBLIC_URL_HOST ??
-      "https://thietbinhayen.vercel.app" +
-        "/verify?token=" +
-        newCus.token +
-        "&email=" +
-        newCus.email;
+      process.env.NEXT_PUBLIC_URL_HOST +
+      "/verify?token=" +
+      newCus.token +
+      "&email=" +
+      newCus.email;
+    console.log("url", url);
+
     const response = await postSendmail(
       JSON.stringify({
         to: data.email,
         subject: "Xác thực tài khoản",
         text: "Xác thực tài khoản",
-        html: `<!DOCTYPE html> <html> <head> <meta charset="utf-8" /> <title></title> </head> <body> <table border="0" cellspacing="0" cellpadding="0" style="max-width:600px"> <tbody> <tr> <td> <table width="100%" border="0" cellspacing="0" cellpadding="0"> <tbody> <tr> <td align="left"> <span class="il">MMM</span> </td> <td align="right"> </td> </tr> </tbody> </table> </td> </tr> <tr height="16"></tr> <tr> <td> <table bgcolor="#4184F3" width="100%" border="0" cellspacing="0" cellpadding="0" style="min-width:332px;max-width:600px;border:1px solid #e0e0e0;border-bottom:0;border-top-left-radius:3px;border-top-right-radius:3px"> <tbody> <tr> <td height="72px" colspan="3"></td> </tr> <tr> <td width="32px"></td> <td style="font-family:Roboto-Regular,Helvetica,Arial,sans-serif;font-size:24px;color:#ffffff;line-height:1.25">Mã xác minh <span class="il">MMM</span></td> <td width="32px"></td> </tr> <tr> <td height="18px" colspan="3"></td> </tr> </tbody> </table> </td> </tr> <tr> <td> <table bgcolor="#FAFAFA" width="100%" border="0" cellspacing="0" cellpadding="0" style="min-width:332px;max-width:600px;border:1px solid #f0f0f0;border-bottom:1px solid #c0c0c0;border-top:0;border-bottom-left-radius:3px;border-bottom-right-radius:3px"> <tbody> <tr height="16px"> <td width="32px" rowspan="3"></td> <td></td> <td width="32px" rowspan="3"></td> </tr> <tr> <td> <p>Xin chào!</p> <p> Mã xác minh bạn cần dùng để truy cập vào Tài khoản <span class="il">MMM</span> của mình ( <span style="color:#659cef" dir="ltr"> <a href="mailto:${data.email}" target="_blank">${data.email}</a> </span>) là: </p> <div style="text-align:center"> <p dir="ltr"><strong style="text-align:center;font-size:24px;font-weight:bold"><a href="${url}">Chọn vào đây để tiến hành xác minh</a> </strong></p> </div> <p> Trân trọng!</p> </td> </tr> <tr height="32px"></tr> </tbody> </table> </td> </tr> </tbody> </table> </body> </html>`,
+        html: `<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Mã xác minh</title> <style> body { font-family: Arial, sans-serif; background-color: #f9f9f9; color: #333333; margin: 0; padding: 0; } table { max-width: 600px; margin: 20px auto; border-spacing: 0; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); } th, td { padding: 16px; text-align: left; } .header { background-color: #4184f3; color: #ffffff; text-align: center; padding: 20px 0; font-size: 20px; font-weight: bold; } .content { padding: 20px; font-size: 16px; line-height: 1.6; } .button { display: inline-block; padding: 10px 20px; color: #ffffff; background-color: #4184f3; text-decoration: none; border-radius: 4px; margin-top: 20px; } .footer { text-align: center; padding: 10px; background-color: #f2f2f2; font-size: 12px; color: #777777; } </style> </head> <body> <table> <!-- Header --> <tr> <td class="header">Mã xác minh MMM</td> </tr> <!-- Nội dung chính --> <tr> <td class="content"> <p>Xin chào,</p> <p> Vui lòng nhấn vào liên kết dưới đây để xác minh tài khoản của bạn: </p> <div style="text-align: center;"> <a href="${url}" class="button" >Xác minh tài khoản</a > </div> <p> Hoặc sao chép đường dẫn sau và dán vào trình duyệt của bạn: <br /> <a href="${url}"> ${url} </a> </p> <p>Trân trọng,</p> <p>Đội ngũ hỗ trợ MMM</p> </td> </tr> <!-- Footer --> <tr> <td class="footer"> <p> Địa chỉ: 123 Đường ABC, Thành phố XYZ | Email: support@ythietbinhayen.com </p> </td> </tr> </table> </body> </html>`,
       })
     );
 
