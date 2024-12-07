@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { orderpayment } from "@/lib/db";
 import { CheckCircle, CircleX } from "lucide-react";
 import Link from "next/link";
@@ -22,7 +21,6 @@ export default async function VnpayReturnPage({
     vnp_SecureHash?: string;
   };
 }) {
-  const session = await auth();
   const data = {
     orderId: searchParams.orderId,
     vnp_Amount: searchParams.vnp_Amount ?? null,
