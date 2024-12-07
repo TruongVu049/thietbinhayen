@@ -131,7 +131,6 @@ export default function CheckoutForm({
           };
 
           const res = await actionCreate(order);
-          let isNavigating = false;
           if (res.status === 200) {
             console.log(order);
             if (order.thanhToan?.loaithanhtoan_id === 2) {
@@ -160,10 +159,7 @@ export default function CheckoutForm({
                 console.error("Đã xảy ra lỗi:", error);
               }
             } else {
-              if (!isNavigating) {
-                isNavigating = true;
-                router.push(`/checkout/return?orderId=${res.body.id}`);
-              }
+              router.push(`/checkout/return?orderId=${res.body.id}`);
             }
           } else {
             router.push("/checkout/return");

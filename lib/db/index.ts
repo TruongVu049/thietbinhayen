@@ -950,14 +950,30 @@ export async function updatePurchaseOrder(
 }
 
 //checkout
+// export async function getProductCheckout(
+//   orderdetail: ChiTietHoaDon[]
+// ): Promise<SanPhamThanhToan[]> {
+//   const res = await FetchPost({
+//     method: "POST",
+//     query: `/api/SanPham/LayDSSanPhamThanhToan`,
+//     data: orderdetail,
+//   });
+//   const data: any = res.body;
+//   return data.value as SanPhamThanhToan[];
+// }
+
 export async function getProductCheckout(
   orderdetail: ChiTietHoaDon[]
 ): Promise<SanPhamThanhToan[]> {
+  // Gọi duy nhất 1 lần API
   const res = await FetchPost({
     method: "POST",
     query: `/api/SanPham/LayDSSanPhamThanhToan`,
     data: orderdetail,
   });
+  if (res.status !== 200) {
+    throw new Error("Lỗi lấy danh sách sản phẩm thanh toán");
+  }
   const data: any = res.body;
   return data.value as SanPhamThanhToan[];
 }
