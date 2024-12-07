@@ -137,7 +137,7 @@ export default async function VnpayReturnPage({
           <p className="md:text-lg text-base">
             {res.status === 200
               ? "Chúc mừng bạn đã đặt hàng thành công."
-              : res.body?.message}
+              : res.body}
           </p>
           <div className="w-full flex items-center justify-between gap-4 md:flex-nowrap flex-wrap">
             <Link
