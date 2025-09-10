@@ -12,6 +12,7 @@ import { Suspense } from "react";
 import { Row } from "@/lib/types";
 import { isValidJSON } from "@/helpers/utils";
 import ViewedProducts from "@/components/product/ViewedProducts";
+import { Metadata } from "next";
 const link = [
   {
     id: 1,
@@ -24,6 +25,29 @@ const link = [
     path: "/product",
   },
 ];
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const product = await getProduct(params.id);
+  if (!product) return { title: "Sản phẩm không tồn tại" };
+
+  return {
+    title: `${product.ten} | Thiết Bị Nhà Yến - Hayen`,
+    description:
+      product.mota?.replace(/<[^>]+>/g, "").slice(0, 150) ||
+      `Mua ${product.ten} chất lượng tại Hayen. Giao hàng toàn quốc.`,
+    openGraph: {
+      title: `${product.ten} | Hayen`,
+      description:
+        product.mota?.replace(/<[^>]+>/g, "").slice(0, 150) ||
+        `Mua ${product.ten} tại Hayen`,
+      images: product.hinhanh ? [product.hinhanh] : [],
+    },
+  };
+}
 
 export default async function Page({ params }: { params: { id: string } }) {
   const product = await getProduct(params.id);
